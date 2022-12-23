@@ -1,62 +1,38 @@
-// import { routes } from '@/stores/Router.js';
-// import { request } from '@/core/utils/Rest';
-
 export const Users = {
   state: () => ({
     // Set context
     table: {
         data: [],
-        paga: 1,
-        maxPage: 1,
-        itemPerPage: 12,
     },
   
     dataForm: {},
 
-    // Filter Object
-    filters: {
-        search: '',
-    },
-
+   
   }),
 
   actions: {
     /**
-     * Function to reload Customer supports table
+     * Function to reload user table
      *
-     * @author Dan Reynoso
+     * 
      */
     async reloadTable() {
-      let params = {
-        search: this.filters.search,
-        itemPerPage: this.table.itemPerPage,
-        pageNumber: this.table.paga,
-      };
-
-      // Config for request
-      const config = {
-        method: 'GET',
-        url: `/api/panel/customer/support/get/page`,
-        log: this.log,
-        params,
-      };
-
+      
       // Make request
-      const response = await request(config);
-
+      const originalResponse = await useFetch('https://agtz6r5ple.execute-api.us-east-1.amazonaws.com/users')
+      const response = originalResponse.data.value
       if (response.success) {
-        this.table.data = response.data.data;
-        this.table.maxPage = response.data.maxPage;
+        this.table.data = response.data.users;
       }
     },
 
     /**
      * Function to reload data format Customer supports
      *
-     * @author Dan Reynoso
+     * 
      */
     async reloadDataForm(id = null) {
-      this.ctx.openElLoading();
+      
       this.dataForm = {};
 
       if (id) {
@@ -79,7 +55,7 @@ export const Users = {
     /**
      * Function to create Customer supports
      *
-     * @author Dan Reynoso
+     * 
      */
     async create() {
       this.ctx.openElLoading();
@@ -120,7 +96,7 @@ export const Users = {
     /**
      * Function to update Customer supports
      *
-     * @author Dan Reynoso
+     * 
      */
     async update() {
       this.ctx.openElLoading();
@@ -162,7 +138,7 @@ export const Users = {
      * Function to delete Customer supports
      *
      * @param Integer id
-     * @author Dan Reynoso
+     * 
      */
     async delete(id) {
       this.ctx.openElLoading();
