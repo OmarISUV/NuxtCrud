@@ -1,5 +1,5 @@
 <template>
   <div>
-    Ordenamiento burbuja
+    <Bubble/>
   </div>
 </template>

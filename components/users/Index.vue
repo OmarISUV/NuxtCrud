@@ -14,8 +14,6 @@
     users.reloadTable();
   };
 
-  const modalCreate = ref(false);
-  const modalUpdate = ref(false);
 
   
 </script>
@@ -25,11 +23,10 @@
     <div class="sm:flex sm:items-center">
       <div class="sm:flex-auto">
         <h1 class="text-xl font-semibold text-main-darker font-text">
-          Equipo de Soporte
+          Usuarios
         </h1>
         <p class="mt-2 text-sm text-gray-700 font-text">
-          Una lista de todos los integrantes del equipo de soporte, incluido su
-          nombre.
+          Busque por email 
         </p>
       </div>
 
@@ -37,7 +34,7 @@
         <button
           type="button"
           class="bg-blue-500 inline-flex items-center justify-center rounded-md border border-transparent bg-main-light px-4 py-2 text-sm font-text text-white shadow-sm hover:bg-main-light focus:outline-none focus:ring-2 focus:ring-main-light focus:ring-offset-2 sm:w-auto"
-          @click="modalCreate = true"
+          @click="users.modalCreate = true"
           >
           Registrar Integrante
         </button>
@@ -53,22 +50,8 @@
 
     <UsersTableList />
 
-    <!-- <div class="flex justify-around mt-5 mb-5">
-      <UtilsPaginationJumpTo
-        :data="{
-          currentPage: users.table.page,
-          total: users.table.maxPage,
-          pageSize: users.table.itemPerPage,
-        }"
-        @change-page="changePage" />
-    </div> -->
-
-    <pre>
-      {{modalCreate}}
-    </pre>
-
-    <div v-if="modalCreate">
-      <UtilsModal @close-component="modalCreate = false">
+    <div v-if="users.modalCreate">
+      <UtilsModal @close-component="users.modalCreate = false">
         <UsersActionsCreate/>
       </UtilsModal>
     </div>

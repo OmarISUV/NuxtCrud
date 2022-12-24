@@ -1,6 +1,6 @@
 <template>
   <div>
-   <PalindromeInput/>
+   <Palindromes/>
   </div>
 </template>
   
