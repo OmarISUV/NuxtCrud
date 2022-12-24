@@ -1,6 +1,5 @@
 <template>
     <div>
-      <UserForm/>
-      <UserTable/>
+      <Users/>
     </div>
 </template>

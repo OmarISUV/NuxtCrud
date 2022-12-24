@@ -2,12 +2,20 @@ export const Users = {
   state: () => ({
     // Set context
     table: {
-        data: [],
+      data: [],
+      page: 1,
+      maxPage: 1,
+      itemPerPage: 12,
     },
   
     dataForm: {},
 
-   
+    // Filter Object
+    filters: {
+      search: '',
+    },
+
+    modalUpdate: false
   }),
 
   actions: {
@@ -17,13 +25,27 @@ export const Users = {
      * 
      */
     async reloadTable() {
-      
+      let query = {
+        pageSize: this.table.itemPerPage,
+        page: this.table.page,
+      }
+
+      if(this.filters.search) query.search = this.filters.search
+
       // Make request
-      const originalResponse = await useFetch('https://agtz6r5ple.execute-api.us-east-1.amazonaws.com/users')
+      const originalResponse = await useFetch('https://agtz6r5ple.execute-api.us-east-1.amazonaws.com/users',{
+        method:'get',
+        query
+      })
+
+      console.log(originalResponse)
+
       const response = originalResponse.data.value
       if (response.success) {
-        this.table.data = response.data.users;
+        this.table.data     = response.data.users;
+        this.table.maxPage  = response.data.maxPage;
       }
+
     },
 
     /**
@@ -31,25 +53,14 @@ export const Users = {
      *
      * 
      */
-    async reloadDataForm(id = null) {
+    async reloadDataForm(user = null) {
       
       this.dataForm = {};
-
-      if (id) {
-        // Config for request
-        const config = {
-          method: 'POST',
-          url: `/api/panel/customer/support/get/data`,
-          log: this.log,
-          data: { id: id },
-        };
-
-        // Make request
-        const response = await request(config);
-        this.dataForm = response.data;
+      
+      if (user) {
+        this.dataForm = user;
       }
 
-      this.ctx.closeElLoading();
     },
 
     /**
@@ -140,36 +151,46 @@ export const Users = {
      * @param Integer id
      * 
      */
-    async delete(id) {
-      this.ctx.openElLoading();
+    async delete(uuid) {
+      // this.ctx.openElLoading();
 
-      id = parseInt(id);
-
-      const config = {
-        method: 'DELETE',
-        url: `/api/panel/customer/support/delete/${id}`,
-        log: this.log,
-      };
-
-      const response = await request(config);
+      
+      // const config = {
+        //   method: 'DELETE',
+        //   url: `/api/panel/customer/support/delete/${id}`,
+        //   log: this.log,
+        // };
+        
+      const originalResponse = await useFetch(
+        'https://agtz6r5ple.execute-api.us-east-1.amazonaws.com/users',
+        {
+          method:'delete',
+          body:{
+            uuid:uuid
+          }
+        },
+      )
+      const response = originalResponse.data.value
 
       if (response.success) {
-        this.ctx.notify({
-          title: 'Solicitud exitosa',
-          message: response.message,
-          type: 'success',
-        });
-        this.reloadTable();
-        this.ctx.system.modal.show = false;
+        // this.ctx.notify({
+        //   title: 'Solicitud exitosa',
+        //   message: response.message,
+        //   type: 'success',
+        // });
+        await this.reloadTable();
+        window.alert("El usuario se elimino")
+        // this.ctx.system.modal.show = false;
       } else {
-        this.ctx.notify({
-          title: 'Solicitud denegada',
-          message: response.message,
-          type: 'error',
-        });
+        window.alert("El usuario NOOOO se elimino")
+        // this.ctx.notify({
+        //   title: 'Solicitud denegada',
+        //   message: response.message,
+        //   type: 'error',
+        // });
       }
 
-      this.ctx.closeElLoading();
+      // this.ctx.closeElLoading();
 
       return response.success;
     },

@@ -7,5 +7,5 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
-  modules: ['@nuxtjs/tailwindcss','@pinia/nuxt'],
+  modules: ['@nuxtjs/tailwindcss','@pinia/nuxt','nuxt-icon'],
 });
